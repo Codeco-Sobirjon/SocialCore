@@ -1,0 +1,11 @@
+
+.inline-related {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.inline-related .form-row {
+    flex: 1 1 calc(50% - 10px);
+    margin-bottom: 15px;
+}
