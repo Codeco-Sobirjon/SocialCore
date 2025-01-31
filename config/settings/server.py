@@ -1,7 +1,7 @@
 from config.settings.base import *
 
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
