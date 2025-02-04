@@ -23,20 +23,20 @@ LOCAL_APPS = [
 
 THIRD_PARTY_APPS = [
     'captcha',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.vk',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.vk',
     'rest_framework',
     'rest_framework_simplejwt',
-    # 'rest_framework.authtoken',
-    # 'dj_rest_auth',
-    # 'dj_rest_auth.registration',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'drf_yasg',
     'corsheaders',
     'django_filters',
     'django_ckeditor_5',
-    # 'django_extensions',
+    'django_extensions',
     *LOCAL_APPS,
 ]
 
