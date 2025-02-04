@@ -1,0 +1,15 @@
+ssh root@217.114.7.66
+
+LwZWdd!gm2QG
+
+cd /var/www/SocialCore
+
+sudo systemctl start chat.socket
+sudo systemctl enable chat.socket
+sudo systemctl daemon-reload
+sudo systemctl restart chat
+
+sudo systemctl start social.socket
+sudo systemctl enable social.socket
+sudo systemctl daemon-reload
+sudo systemctl restart social
