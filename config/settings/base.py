@@ -23,28 +23,43 @@ LOCAL_APPS = [
 
 THIRD_PARTY_APPS = [
     'captcha',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.vk',
     'rest_framework',
     'rest_framework_simplejwt',
+    # 'rest_framework.authtoken',
+    # 'dj_rest_auth',
+    # 'dj_rest_auth.registration',
     'drf_yasg',
     'corsheaders',
     'django_filters',
     'django_ckeditor_5',
-    # 'jazzmin',
+    # 'django_extensions',
     *LOCAL_APPS,
 ]
 
 
 INSTALLED_APPS = [
     'daphne',
-    *THIRD_PARTY_APPS,
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
+    *THIRD_PARTY_APPS,
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
 ]
+
+SITE_ID = 1
+
+# AUTHENTICATION_BACKENDS = (
+#     'django.contrib.auth.backends.ModelBackend',
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
 
 LOCAL_MIDDLEWARE = [
     'config.middleware.middleware.JsonErrorResponseMiddleware',
@@ -60,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # "allauth.account.middleware.AccountMiddleware",
     *LOCAL_MIDDLEWARE,
 ]
 
@@ -107,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -266,3 +282,24 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
+
+# YOUR_VK_CLIENT_ID = '52982778'
+# YOUR_VK_CLIENT_SECRET = 'tPZ6YRgnZzwubzWy7RyF'
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'vk': {
+#         'APP': {
+#             'client_id': YOUR_VK_CLIENT_ID,
+#             'secret': YOUR_VK_CLIENT_SECRET,
+#         },
+#         'SCOPE': ['email'],
+#         'AUTH_PARAMS': {'scope': 'email'},
+#         'OAUTH_PKCE_ENABLED': True,
+#         'OAUTH_CALLBACK_URL': 'http://127.0.0.1:8000/auth/vk/login/callback/'
+#     }
+# }
+#
+# REST_USE_JWT = True
+
+# ACCOUNT_LOGIN_URL = '/auth/account/login/'
+# ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'

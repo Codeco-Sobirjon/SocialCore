@@ -33,6 +33,11 @@ urlpatterns += [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('ckeditor5/', include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
     path('captcha/', include('captcha.urls')),
+
+    path('auth/', include('dj_rest_auth.urls')),
+    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('auth/vk/', include('allauth.socialaccount.urls')),
+    path('auth/account/', include('allauth.account.urls')),
 ]
 
 urlpatterns += [
