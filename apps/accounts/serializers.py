@@ -32,13 +32,13 @@ class SignUpSerializer(serializers.ModelSerializer):
         if data['password'] != data['password_confirm']:
             raise ValidationError({"password_confirm": "Пароли не совпадают"})
 
-        try:
-            captcha = CaptchaStore.objects.get(hashkey=data['captcha_key'])
-        except CaptchaStore.DoesNotExist:
-            raise ValidationError({"captcha": "Неверный ключ CAPTCHA"})
-
-        if captcha.response != data['captcha_value'].lower():
-            raise ValidationError({"captcha": "Неверный код CAPTCHA"})
+        # try:
+        #     captcha = CaptchaStore.objects.get(hashkey=data['captcha_key'])
+        # except CaptchaStore.DoesNotExist:
+        #     raise ValidationError({"captcha": "Неверный ключ CAPTCHA"})
+        #
+        # if captcha.response != data['captcha_value'].lower():
+        #     raise ValidationError({"captcha": "Неверный код CAPTCHA"})
 
         return data
 
