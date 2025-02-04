@@ -257,7 +257,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-BASE_URL = 'http://127.0.0.1:8000/'
+BASE_URL = 'http://217.114.7.66:9000/'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
