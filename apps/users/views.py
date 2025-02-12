@@ -7,13 +7,13 @@ from drf_yasg import openapi
 
 from django.shortcuts import get_object_or_404
 
-from apps.users.models import DemographicData, MedicalHistory, Notes, Interests, DiseaseHistoryDaily
+from apps.users.models import DemographicData, MedicalHistory, Notes, Interests, DiseaseHistoryDaily, MedicalIllness
 from apps.users.serializers import (
     DemographicDataListSerializer, DemographicDataSerializer,
     MedicalHistoryListSerializer, MedicalHistorySerializer,
     NotesListSerializer, NotesSerializer,
     InterestsListSerializer, InterestsSerializer,
-    DiseaseHistoryDailyListSerializer, DiseaseHistoryDailySerializer
+    DiseaseHistoryDailyListSerializer, DiseaseHistoryDailySerializer, MedicalIllnessListSerializer
 )
 
 
@@ -233,3 +233,16 @@ class DiseaseHistoryDailyDetailAPIView(APIView):
         data = get_object_or_404(Interests, pk=pk, user=request.user)
         data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MedicalIllnessAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: MedicalIllnessListSerializer(many=True)}, tags=['MedicalIllness Data'])
+    def get(self, request):
+        data = MedicalIllness.objects.all()
+        serializer = MedicalIllnessListSerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+

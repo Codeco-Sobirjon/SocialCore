@@ -54,16 +54,10 @@ INSTALLED_APPS = [
 
 ]
 
-SITE_ID = 1
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
 
 LOCAL_MIDDLEWARE = [
-    'config.middleware.middleware.JsonErrorResponseMiddleware',
-    'config.middleware.middleware.Custom404Middleware',
+    # 'config.middleware.middleware.JsonErrorResponseMiddleware',
+    # 'config.middleware.middleware.Custom404Middleware',
 ]
 
 MIDDLEWARE = [
@@ -283,23 +277,33 @@ CHANNEL_LAYERS = {
     },
 }
 
-# YOUR_VK_CLIENT_ID = '52982778'
-# YOUR_VK_CLIENT_SECRET = 'tPZ6YRgnZzwubzWy7RyF'
+YOUR_VK_CLIENT_ID = '52982778'
+YOUR_VK_CLIENT_SECRET = 'tPZ6YRgnZzwubzWy7RyF'
 
-# SOCIALACCOUNT_PROVIDERS = {
-#     'vk': {
-#         'APP': {
-#             'client_id': YOUR_VK_CLIENT_ID,
-#             'secret': YOUR_VK_CLIENT_SECRET,
-#         },
-#         'SCOPE': ['email'],
-#         'AUTH_PARAMS': {'scope': 'email'},
-#         'OAUTH_PKCE_ENABLED': True,
-#         'OAUTH_CALLBACK_URL': 'http://127.0.0.1:8000/auth/vk/login/callback/'
-#     }
-# }
-#
-# REST_USE_JWT = True
+SOCIALACCOUNT_PROVIDERS = {
+    'vk': {
+        'APP': {
+            'client_id': YOUR_VK_CLIENT_ID,
+            'secret': YOUR_VK_CLIENT_SECRET,
+        },
+        'SCOPE': ['email'],
+        'AUTH_PARAMS': {'v': '5.131'},
+        'OAUTH_PKCE_ENABLED': True,
+        'METHOD': 'oauth2',
+        'OAUTH_CALLBACK_URL': 'http://127.0.0.1:8000/auth/vk/login/callback/'
+    }
+}
 
-# ACCOUNT_LOGIN_URL = '/auth/account/login/'
-# ACCOUNT_AUTHENTICATED_REDIRECT_URL = '/'
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+REST_USE_JWT = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True

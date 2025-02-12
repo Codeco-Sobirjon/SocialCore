@@ -108,19 +108,18 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(use_url=True, allow_null=True, required=True)
+
     class Meta:
         model = get_user_model()
-        fields = [
-            'username', 'email', 'first_name', 'last_name', 'avatar', 'birth_date'
-        ]
-
+        fields = ['username', 'email', 'first_name', 'last_name', 'avatar', 'birth_date']
         extra_kwargs = {
             'username': {'required': False},
             'email': {'required': False},
             'first_name': {'required': False},
             'last_name': {'required': False},
             'birth_date': {'required': False},
-            'avater': {'required': False}
+            'avatar': {'required': False}
         }
 
     def update(self, instance, validated_data):

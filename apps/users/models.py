@@ -60,7 +60,7 @@ class MedicalHistory(models.Model):
 class Notes(models.Model):
     notes = models.TextField(null=False, blank=False, verbose_name="Название заметки")
     start_date = models.DateField(null=True, blank=True, verbose_name="Дата начала")
-    end_date = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата окончания")
+    end_date = models.DateField(null=True, blank=True, verbose_name="Дата окончания")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='Заметки пользователя', related_name='user_notes')
     is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")

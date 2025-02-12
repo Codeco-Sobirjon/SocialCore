@@ -1,3 +1,5 @@
+import requests
+from django.contrib.auth import get_user_model
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,8 +11,20 @@ from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext as _
 
+from allauth.socialaccount.providers.vk.views import VKOAuth2Adapter
+from dj_rest_auth.registration.views import SocialLoginView
+
 from apps.accounts.serializers import SignUpSerializer, CustomAuthTokenSerializer, CustomUserDetailSerializer, \
     UpdateUserSerializer, PasswordUpdateSerializer
+
+User = get_user_model()
+
+USER_FIELDS = [
+    "first_name", "last_name", "nickname", "screen_name", "sex", "bdate", "city",
+    "country", "timezone", "photo", "photo_medium", "photo_big", "photo_max_orig",
+    "has_mobile", "contacts", "education", "online", "counters", "relation",
+    "last_seen", "activity", "universities",
+]
 
 
 class GenerateCaptchaAPIView(APIView):
@@ -93,7 +107,7 @@ class CustomUserDetailView(APIView):
     )
     def put(self, request):
         user = request.user
-        serializer = UpdateUserSerializer(user, data=request.data, partial=True, context={'request': request} )
+        serializer = UpdateUserSerializer(user, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -114,7 +128,7 @@ class PasswordUpdateView(APIView):
 
     @swagger_auto_schema(
         request_body=PasswordUpdateSerializer,
-        tags = ['Account'],
+        tags=['Account'],
         responses={
             200: "Password updated successfully.",
             400: "Bad Request: Password update failed."
@@ -127,3 +141,51 @@ class PasswordUpdateView(APIView):
             serializer.update(request.user, serializer.validated_data)
             return Response({"detail": "Password updated successfully."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VKLogin(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        access_token = data.get("access_token")
+
+        if not access_token:
+            return Response({"error": "Access token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        profile_url = "https://api.vk.com/method/users.get"
+        params = {
+            "v": "5.131",
+            "access_token": access_token,
+            "fields": ",".join(USER_FIELDS),
+        }
+
+        try:
+            response = requests.get(profile_url, params=params)
+            response.raise_for_status()
+            user_data = response.json().get("response", [{}])[0]
+
+            if not user_data:
+                return Response({"error": "No user data found"}, status=status.HTTP_404_NOT_FOUND)
+
+            vk_id = user_data.get("id")
+            first_name = user_data.get("first_name", "")
+            last_name = user_data.get("last_name", "")
+            username = f"vk_{vk_id}"
+
+            user, created = User.objects.get_or_create(username=username, defaults={
+                "first_name": first_name,
+                "last_name": last_name,
+            })
+
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+
+            return Response({
+                "access_token": access_token,
+                "refresh_token": str(refresh),
+                "user_data": user_data
+            }, status=status.HTTP_200_OK)
+
+        except requests.exceptions.RequestException as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

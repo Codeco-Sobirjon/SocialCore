@@ -5,7 +5,8 @@ from apps.users.views import (
     MedicalHistoryAPIView, MedicalHistoryDetailAPIView,
     NotesAPIView, NotesDetailAPIView,
     InterestsAPIView, InterestsDetailAPIView,
-    DiseaseHistoryDailyAPIView, DiseaseHistoryDailyDetailAPIView
+    DiseaseHistoryDailyAPIView, DiseaseHistoryDailyDetailAPIView,
+    MedicalIllnessAPIView
 )
 
 urlpatterns = [
@@ -28,4 +29,6 @@ urlpatterns = [
     # Мои истории
     path('daily_history/', DiseaseHistoryDailyAPIView.as_view(), name='daily_history-list'),
     path('daily_history/<int:pk>/', DiseaseHistoryDailyDetailAPIView.as_view(), name='daily_history-detail'),
+
+    path('medical/illness/', MedicalIllnessAPIView.as_view(), name='medical-illness')
 ]

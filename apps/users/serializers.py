@@ -96,7 +96,7 @@ class NotesListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notes
-        fields = ['id', 'notes', 'start_date', 'end_date', 'created_at', 'user']
+        fields = ['id', 'notes', 'start_date', 'end_date', 'created_at']
 
         def create(self, validated_data):
             request = self.context.get('request')
@@ -131,7 +131,7 @@ class InterestsListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Interests
-        fields = ['id', 'name', 'created_at', 'user']
+        fields = ['id', 'name', 'created_at']
 
         def create(self, validated_data):
             request = self.context.get('request')
@@ -166,7 +166,7 @@ class DiseaseHistoryDailyListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DiseaseHistoryDaily
-        fields = ['id', 'name', 'created_at', 'user']
+        fields = ['id', 'name', 'created_at']
 
         def create(self, validated_data):
             request = self.context.get('request')
