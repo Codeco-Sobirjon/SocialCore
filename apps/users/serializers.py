@@ -12,7 +12,6 @@ User = get_user_model()
 
 
 class DemographicDataListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = DemographicData
         fields = ['id', 'city', 'region', 'position', 'ethnicity', 'type_health_insurance', 'biography',
@@ -30,7 +29,6 @@ class DemographicDataListSerializer(serializers.ModelSerializer):
             return create
 
         def update(self, instance, validated_data):
-
             with transaction.atomic():
                 for attr, value in validated_data.items():
                     setattr(instance, attr, value)
@@ -50,17 +48,16 @@ class DemographicDataSerializer(serializers.ModelSerializer):
 
 
 class MedicalIllnessListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MedicalIllness
         fields = ['id', 'name']
 
 
 class MedicalHistoryListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MedicalHistory
-        fields = ['id', 'medical_illness', 'history', 'start_date', 'still_ongoing', 'created_at', 'user', 'is_activate']
+        fields = ['id', 'medical_illness', 'history', 'start_date', 'still_ongoing', 'created_at', 'user',
+                  'is_activate']
 
         def create(self, validated_data):
             request = self.context.get('request')
@@ -89,11 +86,11 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MedicalHistory
-        fields = ['id', 'medical_illness', 'history', 'start_date', 'still_ongoing', 'created_at', 'user', 'is_activate']
+        fields = ['id', 'medical_illness', 'history', 'start_date', 'still_ongoing', 'created_at', 'user',
+                  'is_activate']
 
 
 class NotesListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Notes
         fields = ['id', 'notes', 'start_date', 'end_date', 'created_at', 'is_activate']
@@ -128,10 +125,9 @@ class NotesSerializer(serializers.ModelSerializer):
 
 
 class InterestsListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Interests
-        fields = ['id', 'name', 'created_at']
+        fields = ['id', 'name', 'created_at', 'is_activate']
 
         def create(self, validated_data):
             request = self.context.get('request')
@@ -163,7 +159,6 @@ class InterestsSerializer(serializers.ModelSerializer):
 
 
 class DiseaseHistoryDailyListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = DiseaseHistoryDaily
         fields = ['id', 'name', 'created_at', 'is_activate']
