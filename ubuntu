@@ -4,6 +4,8 @@ LwZWdd!gm2QG
 
 cd /var/www/SocialCore
 
+source .venv/bin/activate
+
 sudo systemctl start chat.socket
 sudo systemctl enable chat.socket
 sudo systemctl daemon-reload
