@@ -135,7 +135,7 @@ class InterestsListSerializer(serializers.ModelSerializer):
         user = request.user if request and hasattr(request, 'user') else None
 
         with transaction.atomic():
-            create = MedicalHistory.objects.create(
+            create = Interests.objects.create(
                 **validated_data, user=user
             )
         return create
@@ -169,7 +169,7 @@ class DiseaseHistoryDailyListSerializer(serializers.ModelSerializer):
         user = request.user if request and hasattr(request, 'user') else None
 
         with transaction.atomic():
-            create = MedicalHistory.objects.create(
+            create = DiseaseHistoryDaily.objects.create(
                 **validated_data, user=user
             )
         return create
