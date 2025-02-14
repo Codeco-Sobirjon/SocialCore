@@ -6,10 +6,10 @@ cd /var/www/SocialCore
 
 source .venv/bin/activate
 
-sudo systemctl start chat.socket
-sudo systemctl enable chat.socket
+sudo systemctl start chat_social.socket
+sudo systemctl enable chat_social.socket
 sudo systemctl daemon-reload
-sudo systemctl restart chat
+sudo systemctl restart chat_social
 
 sudo systemctl start social.socket
 sudo systemctl enable social.socket
