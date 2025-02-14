@@ -17,25 +17,25 @@ class DemographicDataListSerializer(serializers.ModelSerializer):
         fields = ['id', 'city', 'region', 'position', 'ethnicity', 'type_health_insurance', 'biography',
                   'user', 'created_at', 'is_activate']
 
-        def create(self, validated_data):
-            request = self.context.get('request')
+    def create(self, validated_data):
+        request = self.context.get('request')
 
-            user = request.user if request and hasattr(request, 'user') else None
+        user = request.user if request and hasattr(request, 'user') else None
 
-            with transaction.atomic():
-                create = DemographicData.objects.create(
-                    **validated_data, user=user
-                )
-            return create
+        with transaction.atomic():
+            create = DemographicData.objects.create(
+                **validated_data, user=user
+            )
+        return create
 
-        def update(self, instance, validated_data):
-            with transaction.atomic():
-                for attr, value in validated_data.items():
-                    setattr(instance, attr, value)
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-                instance.save()
+            instance.save()
 
-            return instance
+        return instance
 
 
 class DemographicDataSerializer(serializers.ModelSerializer):
@@ -59,25 +59,25 @@ class MedicalHistoryListSerializer(serializers.ModelSerializer):
         fields = ['id', 'medical_illness', 'history', 'start_date', 'still_ongoing', 'created_at', 'user',
                   'is_activate']
 
-        def create(self, validated_data):
-            request = self.context.get('request')
+    def create(self, validated_data):
+        request = self.context.get('request')
 
-            user = request.user if request and hasattr(request, 'user') else None
+        user = request.user if request and hasattr(request, 'user') else None
 
-            with transaction.atomic():
-                create = MedicalHistory.objects.create(
-                    **validated_data, user=user
-                )
-            return create
+        with transaction.atomic():
+            create = MedicalHistory.objects.create(
+                **validated_data, user=user
+            )
+        return create
 
-        def update(self, instance, validated_data):
-            with transaction.atomic():
-                for attr, value in validated_data.items():
-                    setattr(instance, attr, value)
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-                instance.save()
+            instance.save()
 
-            return instance
+        return instance
 
 
 class MedicalHistorySerializer(serializers.ModelSerializer):
@@ -95,25 +95,25 @@ class NotesListSerializer(serializers.ModelSerializer):
         model = Notes
         fields = ['id', 'notes', 'start_date', 'end_date', 'created_at', 'is_activate']
 
-        def create(self, validated_data):
-            request = self.context.get('request')
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user if request and hasattr(request, 'user') else None
 
-            user = request.user if request and hasattr(request, 'user') else None
+        if not user:
+            raise serializers.ValidationError({"user": "User not found in request context."})
 
-            with transaction.atomic():
-                create = MedicalHistory.objects.create(
-                    **validated_data, user=user
-                )
-            return create
+        with transaction.atomic():
+            note = Notes.objects.create(**validated_data, user=user)
+        return note
 
-        def update(self, instance, validated_data):
-            with transaction.atomic():
-                for attr, value in validated_data.items():
-                    setattr(instance, attr, value)
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-                instance.save()
+            instance.save()
 
-            return instance
+        return instance
 
 
 class NotesSerializer(serializers.ModelSerializer):
@@ -129,25 +129,25 @@ class InterestsListSerializer(serializers.ModelSerializer):
         model = Interests
         fields = ['id', 'name', 'created_at', 'is_activate']
 
-        def create(self, validated_data):
-            request = self.context.get('request')
+    def create(self, validated_data):
+        request = self.context.get('request')
 
-            user = request.user if request and hasattr(request, 'user') else None
+        user = request.user if request and hasattr(request, 'user') else None
 
-            with transaction.atomic():
-                create = MedicalHistory.objects.create(
-                    **validated_data, user=user
-                )
-            return create
+        with transaction.atomic():
+            create = MedicalHistory.objects.create(
+                **validated_data, user=user
+            )
+        return create
 
-        def update(self, instance, validated_data):
-            with transaction.atomic():
-                for attr, value in validated_data.items():
-                    setattr(instance, attr, value)
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-                instance.save()
+            instance.save()
 
-            return instance
+        return instance
 
 
 class InterestsSerializer(serializers.ModelSerializer):
@@ -163,25 +163,25 @@ class DiseaseHistoryDailyListSerializer(serializers.ModelSerializer):
         model = DiseaseHistoryDaily
         fields = ['id', 'name', 'created_at', 'is_activate']
 
-        def create(self, validated_data):
-            request = self.context.get('request')
+    def create(self, validated_data):
+        request = self.context.get('request')
 
-            user = request.user if request and hasattr(request, 'user') else None
+        user = request.user if request and hasattr(request, 'user') else None
 
-            with transaction.atomic():
-                create = MedicalHistory.objects.create(
-                    **validated_data, user=user
-                )
-            return create
+        with transaction.atomic():
+            create = MedicalHistory.objects.create(
+                **validated_data, user=user
+            )
+        return create
 
-        def update(self, instance, validated_data):
-            with transaction.atomic():
-                for attr, value in validated_data.items():
-                    setattr(instance, attr, value)
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-                instance.save()
+            instance.save()
 
-            return instance
+        return instance
 
 
 class DiseaseHistoryDailySerializer(serializers.ModelSerializer):
@@ -197,25 +197,25 @@ class FollowersListSerializer(serializers.ModelSerializer):
         model = Followers
         fields = ['id', 'user', 'follow', 'created_at', 'is_activate']
 
-        def create(self, validated_data):
-            request = self.context.get('request')
+    def create(self, validated_data):
+        request = self.context.get('request')
 
-            user = request.user if request and hasattr(request, 'user') else None
+        user = request.user if request and hasattr(request, 'user') else None
 
-            with transaction.atomic():
-                create = Followers.objects.create(
-                    **validated_data, user=user
-                )
-            return create
+        with transaction.atomic():
+            create = Followers.objects.create(
+                **validated_data, user=user
+            )
+        return create
 
-        def update(self, instance, validated_data):
-            with transaction.atomic():
-                for attr, value in validated_data.items():
-                    setattr(instance, attr, value)
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
 
-                instance.save()
+            instance.save()
 
-            return instance
+        return instance
 
 
 class FollowersSerializer(serializers.ModelSerializer):
