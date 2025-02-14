@@ -1,7 +1,7 @@
 from django.contrib import admin
 from apps.users.models import (
     DemographicData, MedicalHistory, Notes, Interests, MedicalIllness,
-    DiseaseHistoryDaily
+    DiseaseHistoryDaily, Followers
 )
 
 
@@ -41,4 +41,51 @@ class DiseaseHistoryDailyTableInlines(admin.TabularInline):
     fields = ['name']
 
 
+@admin.register(DemographicData)
+class DemographicDataAdmin(admin.ModelAdmin):
+    list_display = (
+    'user', 'city', 'region', 'position', 'ethnicity', 'type_health_insurance', 'biography', 'is_activate',
+    'created_at')
+    list_filter = ('user',)
+    search_fields = ('user__username', 'city', 'region', 'position', 'ethnicity')
+    ordering = ('-created_at',)
 
+
+@admin.register(MedicalHistory)
+class MedicalHistoryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'medical_illness', 'history', 'start_date', 'still_ongoing', 'is_activate', 'created_at')
+    list_filter = ('user',)
+    search_fields = ('user__username', 'history', 'medical_illness__name')
+    ordering = ('-created_at',)
+
+
+@admin.register(Notes)
+class NotesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'notes', 'start_date', 'end_date', 'is_activate', 'created_at')
+    list_filter = ('user',)
+    search_fields = ('user__username', 'notes')
+    ordering = ('-created_at',)
+
+
+@admin.register(Interests)
+class InterestsAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name', 'is_activate', 'created_at')
+    list_filter = ('user',)
+    search_fields = ('user__username', 'name')
+    ordering = ('-created_at',)
+
+
+@admin.register(DiseaseHistoryDaily)
+class DiseaseHistoryDailyAdmin(admin.ModelAdmin):
+    list_display = ('user', 'name', 'is_activate', 'created_at')
+    list_filter = ('user',)
+    search_fields = ('user__username', 'name')
+    ordering = ('-created_at',)
+
+
+@admin.register(Followers)
+class FollowersAdmin(admin.ModelAdmin):
+    list_display = ("user", "follow", "created_at")
+    search_fields = ("user__username", "follow__username")
+    list_filter = ("created_at",)
+    ordering = ("-created_at",)

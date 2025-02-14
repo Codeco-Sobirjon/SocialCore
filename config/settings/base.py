@@ -23,15 +23,8 @@ LOCAL_APPS = [
 
 THIRD_PARTY_APPS = [
     'captcha',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.vk',
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
     'drf_yasg',
     'corsheaders',
     'django_filters',
@@ -56,8 +49,8 @@ INSTALLED_APPS = [
 
 
 LOCAL_MIDDLEWARE = [
-    # 'config.middleware.middleware.JsonErrorResponseMiddleware',
-    # 'config.middleware.middleware.Custom404Middleware',
+    'config.middleware.middleware.JsonErrorResponseMiddleware',
+    'config.middleware.middleware.Custom404Middleware',
 ]
 
 MIDDLEWARE = [
@@ -69,7 +62,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
     *LOCAL_MIDDLEWARE,
 ]
 
@@ -294,11 +286,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-SITE_ID = 1
-
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 REST_USE_JWT = True

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 
 from apps.users.models import (
-    DemographicData, MedicalHistory, Notes, Interests, MedicalIllness, DiseaseHistoryDaily
+    DemographicData, MedicalHistory, Notes, Interests, MedicalIllness, DiseaseHistoryDaily, Followers
 )
 from apps.accounts.serializers import CustomUserDetailSerializer
 
@@ -190,3 +190,38 @@ class DiseaseHistoryDailySerializer(serializers.ModelSerializer):
     class Meta:
         model = DiseaseHistoryDaily
         fields = ['id', 'name', 'created_at', 'user', 'is_activate']
+
+
+class FollowersListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Followers
+        fields = ['id', 'user', 'follow', 'created_at', 'is_activate']
+
+        def create(self, validated_data):
+            request = self.context.get('request')
+
+            user = request.user if request and hasattr(request, 'user') else None
+
+            with transaction.atomic():
+                create = Followers.objects.create(
+                    **validated_data, user=user
+                )
+            return create
+
+        def update(self, instance, validated_data):
+            with transaction.atomic():
+                for attr, value in validated_data.items():
+                    setattr(instance, attr, value)
+
+                instance.save()
+
+            return instance
+
+
+class FollowersSerializer(serializers.ModelSerializer):
+    user = CustomUserDetailSerializer(read_only=True)
+    follow = CustomUserDetailSerializer(read_only=True)
+
+    class Meta:
+        model = Followers
+        fields = ['id', 'user', 'follow', 'created_at', 'is_activate']

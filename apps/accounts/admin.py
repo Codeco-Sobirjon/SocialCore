@@ -4,6 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 from apps.accounts.models import CustomUser
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
+from django.contrib.sites.models import Site
+
 
 from apps.users.admin import (
     DemographicDataTableInlines, MedicalHistoryTableInlines,
@@ -68,3 +70,7 @@ admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.site_header = _("Social Core Администрации Панель. ")
 admin.site.site_title = _("Social Core Панель управления.")
 admin.site.index_title = _("Добро пожаловать в админку Social Core.")
+
+admin.site.unregister(Site)
+admin.site.unregister(CaptchaStore)
+

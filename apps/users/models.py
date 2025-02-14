@@ -19,7 +19,7 @@ class DemographicData(models.Model):
 
     class Meta:
         verbose_name = "Демографические данные пользователя"
-        verbose_name_plural = "Демографические данные пользователя"
+        verbose_name_plural = "1. Демографические данные пользователя"
 
     def __str__(self):
         return f"{self.user}"
@@ -28,9 +28,11 @@ class DemographicData(models.Model):
 class MedicalIllness(models.Model):
     name = models.CharField(max_length=300, verbose_name="Наименование заболеваний", null=True, blank=True)
 
+    objects = models.Manager()
+
     class Meta:
         verbose_name = "Тип заболевания"
-        verbose_name_plural = "Тип заболевания"
+        verbose_name_plural = "2. Тип заболевания"
 
     def __str__(self):
         return f"{self.name}"
@@ -51,7 +53,7 @@ class MedicalHistory(models.Model):
 
     class Meta:
         verbose_name = "История болезни пользователя"
-        verbose_name_plural = "История болезни пользователя"
+        verbose_name_plural = "3. История болезни пользователя"
 
     def __str__(self):
         return f"{self.user}"
@@ -70,7 +72,7 @@ class Notes(models.Model):
 
     class Meta:
         verbose_name = "Заметки пользователя"
-        verbose_name_plural = "Заметки пользователя"
+        verbose_name_plural = "4. Заметки пользователя"
 
     def __str__(self):
         return f"{self.user}"
@@ -87,7 +89,7 @@ class Interests(models.Model):
 
     class Meta:
         verbose_name = "Интерес пользователя"
-        verbose_name_plural = "Интерес пользователя"
+        verbose_name_plural = "5. Интерес пользователя"
 
     def __str__(self):
         return f"{self.user}"
@@ -104,7 +106,25 @@ class DiseaseHistoryDaily(models.Model):
 
     class Meta:
         verbose_name = "История пользователя ежедневно"
-        verbose_name_plural = "История пользователя ежедневно"
+        verbose_name_plural = "6. История пользователя ежедневно"
 
     def __str__(self):
         return f"{self.user}"
+
+
+class Followers(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
+                             verbose_name="Автор", related_name='author')
+    follow = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
+                               verbose_name="Подписчик", related_name='user_follow')
+    is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")
+    created_at = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата подписки")
+
+    objects = models.Manager()
+
+    class Meta:
+        verbose_name = "Подписка"
+        verbose_name_plural = "7. Подписки"
+
+    def __str__(self):
+        return f"{self.user} → {self.follow}"

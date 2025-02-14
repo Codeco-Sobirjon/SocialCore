@@ -6,7 +6,7 @@ from apps.users.views import (
     NotesAPIView, NotesDetailAPIView,
     InterestsAPIView, InterestsDetailAPIView,
     DiseaseHistoryDailyAPIView, DiseaseHistoryDailyDetailAPIView,
-    MedicalIllnessAPIView
+    MedicalIllnessAPIView, FollowerAPIView, FollowersDetailAPIView
 )
 
 urlpatterns = [
@@ -30,5 +30,8 @@ urlpatterns = [
     path('daily_history/', DiseaseHistoryDailyAPIView.as_view(), name='daily_history-list'),
     path('daily_history/<int:pk>/', DiseaseHistoryDailyDetailAPIView.as_view(), name='daily_history-detail'),
 
-    path('medical/illness/', MedicalIllnessAPIView.as_view(), name='medical-illness')
+    path('medical/illness/', MedicalIllnessAPIView.as_view(), name='medical-illness'),
+
+    path('followers/', FollowerAPIView.as_view(), name='followers-list'),
+    path('followers/<int:pk>/', FollowersDetailAPIView.as_view(), name='followers-detail'),
 ]

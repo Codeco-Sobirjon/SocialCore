@@ -10,10 +10,6 @@ from drf_yasg import openapi
 from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext as _
-
-from allauth.socialaccount.providers.vk.views import VKOAuth2Adapter
-from dj_rest_auth.registration.views import SocialLoginView
-
 from apps.accounts.serializers import SignUpSerializer, CustomAuthTokenSerializer, CustomUserDetailSerializer, \
     UpdateUserSerializer, PasswordUpdateSerializer
 

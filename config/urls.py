@@ -36,9 +36,6 @@ urlpatterns += [
     path('captcha/', include('captcha.urls')),
 
     path('auth/vk/', VKLogin.as_view(), name='vk_login'),
-    path('auth/', include('dj_rest_auth.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls')),
-    path('auth/social/', include('allauth.socialaccount.urls')),
 ]
 
 urlpatterns += [
