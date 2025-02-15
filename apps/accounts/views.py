@@ -128,7 +128,8 @@ class CustomUserView(APIView):
         operation_description="Retrieve details of the guest user.", tags=['Account']
     )
     def get(self, request, *args, **kwargs):
-        user = get_object_or_404(CustomUserView, id=kwargs.get('id'))
+        user_model = get_user_model()
+        user = get_object_or_404(user_model, id=kwargs.get('id'))
         serializer = CustomUserDetailSerializer(user, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
