@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from apps.users.models import (
     DemographicData, MedicalHistory, Notes, Interests, DiseaseHistoryDaily, MedicalIllness, Followers
@@ -26,7 +28,7 @@ class DemographicDataAPIView(APIView):
         tags=['Demographic Data']
     )
     def get(self, request):
-        data = DemographicData.objects.select_related('user').filter(user=request.user)
+        data = DemographicData.objects.select_related('user').filter(user=request.user, is_activate=True)
         serializer = DemographicDataSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -70,7 +72,7 @@ class MedicalHistoryAPIView(APIView):
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)}, tags=['Medical History'])
     def get(self, request):
-        data = MedicalHistory.objects.select_related('user').filter(user=request.user)
+        data = MedicalHistory.objects.select_related('user').filter(user=request.user, is_activate=True)
         serializer = MedicalHistorySerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -113,7 +115,7 @@ class NotesAPIView(APIView):
 
     @swagger_auto_schema(responses={200: NotesSerializer(many=True)}, tags=['Notes Data'])
     def get(self, request):
-        data = Notes.objects.select_related('user').filter(user=request.user)
+        data = Notes.objects.select_related('user').filter(user=request.user, is_activate=True)
         serializer = NotesSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -156,7 +158,7 @@ class InterestsAPIView(APIView):
 
     @swagger_auto_schema(responses={200: InterestsSerializer(many=True)}, tags=['Interests Data'])
     def get(self, request):
-        data = Interests.objects.select_related('user').filter(user=request.user)
+        data = Interests.objects.select_related('user').filter(user=request.user, is_activate=True)
         serializer = InterestsSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -199,7 +201,7 @@ class DiseaseHistoryDailyAPIView(APIView):
 
     @swagger_auto_schema(responses={200: DiseaseHistoryDailySerializer(many=True)}, tags=['Disease History Daily Data'])
     def get(self, request):
-        data = DiseaseHistoryDaily.objects.select_related('user').filter(user=request.user)
+        data = DiseaseHistoryDaily.objects.select_related('user').filter(user=request.user, is_activate=True)
         serializer = DiseaseHistoryDailySerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -253,7 +255,7 @@ class FollowerAPIView(APIView):
 
     @swagger_auto_schema(responses={200: FollowersSerializer(many=True)}, tags=['Followers'])
     def get(self, request):
-        data = Followers.objects.select_related('user').filter(user=request.user)
+        data = Followers.objects.select_related('user').filter(user=request.user, is_activate=True)
         serializer = FollowersSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -289,3 +291,59 @@ class FollowersDetailAPIView(APIView):
         data = get_object_or_404(Followers, pk=pk, user=request.user)
         data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UpdatedAllIsActiveIssuesUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        tags= ['Update Is Active for all user details.  '],
+        operation_summary="Update is_active status for all related user data",
+        operation_description="Updates the is_active field for DemographicData, MedicalHistory, Notes, Interests, DiseaseHistoryDaily, and Followers models related to the authenticated user.",
+        manual_parameters=[
+            openapi.Parameter(
+                "is_active",
+                openapi.IN_PATH,
+                description="Set 1 to activate or 0 to deactivate all records",
+                type=openapi.TYPE_STRING,
+                enum=["0", "1"],
+                required=True
+            )
+        ],
+        responses={
+            200: openapi.Response(
+                description="Successful update",
+                examples={"application/json": {"message": "All records successfully updated. is_active=True"}}
+            ),
+            400: openapi.Response(
+                description="Invalid request",
+                examples={"application/json": {"error": "'is_active' must be 0 or 1"}}
+            ),
+            401: openapi.Response(
+                description="Unauthorized",
+                examples={"application/json": {"detail": "Authentication credentials were not provided."}}
+            ),
+        }
+    )
+    def put(self, request, *args, **kwargs):
+        is_active = kwargs.get('is_active')
+
+        print(type(is_active))
+        if is_active is None:
+            return Response({"error": "'is_active' parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+
+        try:
+            with transaction.atomic():
+                DemographicData.objects.filter(user=user).update(is_activate=False)
+                MedicalHistory.objects.filter(user=user).update(is_activate=False)
+                Notes.objects.filter(user=user).update(is_activate=False)
+                Interests.objects.filter(user=user).update(is_activate=False)
+                DiseaseHistoryDaily.objects.filter(user=user).update(is_activate=False)
+                Followers.objects.filter(user=user).update(is_activate=False)
+
+            return Response({"message": f"All records successfully updated. is_active={False}"}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

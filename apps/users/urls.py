@@ -6,7 +6,7 @@ from apps.users.views import (
     NotesAPIView, NotesDetailAPIView,
     InterestsAPIView, InterestsDetailAPIView,
     DiseaseHistoryDailyAPIView, DiseaseHistoryDailyDetailAPIView,
-    MedicalIllnessAPIView, FollowerAPIView, FollowersDetailAPIView
+    MedicalIllnessAPIView, FollowerAPIView, FollowersDetailAPIView, UpdatedAllIsActiveIssuesUserView
 )
 
 urlpatterns = [
@@ -34,4 +34,6 @@ urlpatterns = [
 
     path('followers/', FollowerAPIView.as_view(), name='followers-list'),
     path('followers/<int:pk>/', FollowersDetailAPIView.as_view(), name='followers-detail'),
+
+    path('update-is-active/<int:is_active>/', UpdatedAllIsActiveIssuesUserView.as_view(), name='update_is_active'),
 ]

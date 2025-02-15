@@ -21,6 +21,20 @@ class Blog(models.Model):
         return f"{self.title} {self.medical_illness.name}"
 
 
+class BlogImage(models.Model):
+    image = models.ImageField(upload_to='blog/images/', null=True, blank=True, verbose_name='')
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='images', verbose_name="Блог")
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return f"Blog: {self.blog}"
+
+    class Meta:
+        verbose_name = "Изображения блога"
+        verbose_name_plural = "Изображения блога"
+
+
 class BlogViews(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='views', verbose_name="Блог")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,

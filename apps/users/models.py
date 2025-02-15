@@ -12,7 +12,7 @@ class DemographicData(models.Model):
     biography = models.CharField(max_length=300, verbose_name="Биография", null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='Демографические данные пользователя', related_name='user_demographic_data')
-    is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")
+    is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
     created_at = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата публикации")
 
     objects = models.Manager()
@@ -45,7 +45,7 @@ class MedicalHistory(models.Model):
     created_at = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата публикации")
     medical_illness = models.ForeignKey(MedicalIllness, on_delete=models.CASCADE, null=True, blank=True,
                                         verbose_name='Тип заболевания', related_name='medical_illness')
-    is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")
+    is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='История болезни пользователя', related_name='user_medical_history')
 
@@ -65,7 +65,7 @@ class Notes(models.Model):
     end_date = models.DateField(null=True, blank=True, verbose_name="Дата окончания")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='Заметки пользователя', related_name='user_notes')
-    is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")
+    is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
     created_at = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата публикации")
 
     objects = models.Manager()
@@ -82,7 +82,7 @@ class Interests(models.Model):
     name = models.CharField(max_length=300, verbose_name="Название интереса", null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='Интерес пользователя', related_name='user_insterest')
-    is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")
+    is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
     created_at = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата публикации")
 
     objects = models.Manager()
@@ -97,7 +97,7 @@ class Interests(models.Model):
 
 class DiseaseHistoryDaily(models.Model):
     name = models.TextField(null=True, blank=True, verbose_name='Ежедневное написание статей о болезнях')
-    is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")
+    is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
     created_at = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата публикации")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='Интерес пользователя', related_name='user_disease_history_daily')
@@ -117,7 +117,7 @@ class Followers(models.Model):
                              verbose_name="Автор", related_name='author')
     follow = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                                verbose_name="Подписчик", related_name='user_follow')
-    is_activate = models.BooleanField(default=False, null=True, blank=True, verbose_name="Активируется")
+    is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
     created_at = models.DateField(auto_now_add=True, null=True, blank=True, verbose_name="Дата подписки")
 
     objects = models.Manager()

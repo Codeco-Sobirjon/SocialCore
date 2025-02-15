@@ -1,5 +1,6 @@
 import requests
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -117,6 +118,19 @@ class CustomUserDetailView(APIView):
         user = request.user
         user.delete()
         return Response({"detail": _("User deleted successfully.")}, status=status.HTTP_204_NO_CONTENT)
+
+
+class CustomUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        responses={200: CustomUserDetailSerializer()},
+        operation_description="Retrieve details of the guest user.", tags=['Account']
+    )
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(CustomUserView, id=kwargs.get('id'))
+        serializer = CustomUserDetailSerializer(user, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PasswordUpdateView(APIView):
