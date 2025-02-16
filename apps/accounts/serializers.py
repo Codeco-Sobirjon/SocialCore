@@ -99,12 +99,29 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
 class CustomUserDetailSerializer(serializers.ModelSerializer):
     groups = GroupListSerializer(many=True, read_only=True)
+    is_activate = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
         fields = [
-            'id', 'username', 'email', 'first_name', 'last_name', 'groups', 'avatar', 'birth_date'
+            'id', 'username', 'email', 'first_name', 'last_name', 'groups', 'avatar', 'birth_date', 'is_activate'
         ]
+
+    def get_is_activate(self, obj):
+        related_models = [
+            obj.user_demographic_data.all(),
+            obj.user_medical_history.all(),
+            obj.user_notes.all(),
+            obj.user_insterest.all(),
+            obj.user_disease_history_daily.all(),
+            obj.user_follow.all()
+        ]
+
+        for queryset in related_models:
+            if any(not item.is_activate for item in queryset):
+                return False
+
+        return True
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
