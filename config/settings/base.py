@@ -256,8 +256,8 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-# BASE_URL = 'https://api.tabakoptrf.ru/'
-BASE_URL = 'http://127.0.0.1:8000/'
+BASE_URL = 'https://api.tabakoptrf.ru/'
+# BASE_URL = 'http://127.0.0.1:8000/'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
