@@ -28,7 +28,7 @@ class DemographicDataAPIView(APIView):
         tags=['Demographic Data']
     )
     def get(self, request):
-        data = DemographicData.objects.select_related('user').filter(user=request.user, is_activate=True)
+        data = DemographicData.objects.select_related('user').filter(user=request.user)
         serializer = DemographicDataSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -72,7 +72,7 @@ class MedicalHistoryAPIView(APIView):
 
     @swagger_auto_schema(responses={200: MedicalHistorySerializer(many=True)}, tags=['Medical History'])
     def get(self, request):
-        data = MedicalHistory.objects.select_related('user').filter(user=request.user, is_activate=True)
+        data = MedicalHistory.objects.select_related('user').filter(user=request.user)
         serializer = MedicalHistorySerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -115,7 +115,7 @@ class NotesAPIView(APIView):
 
     @swagger_auto_schema(responses={200: NotesSerializer(many=True)}, tags=['Notes Data'])
     def get(self, request):
-        data = Notes.objects.select_related('user').filter(user=request.user, is_activate=True)
+        data = Notes.objects.select_related('user').filter(user=request.user)
         serializer = NotesSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -158,7 +158,7 @@ class InterestsAPIView(APIView):
 
     @swagger_auto_schema(responses={200: InterestsSerializer(many=True)}, tags=['Interests Data'])
     def get(self, request):
-        data = Interests.objects.select_related('user').filter(user=request.user, is_activate=True)
+        data = Interests.objects.select_related('user').filter(user=request.user)
         serializer = InterestsSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -201,7 +201,7 @@ class DiseaseHistoryDailyAPIView(APIView):
 
     @swagger_auto_schema(responses={200: DiseaseHistoryDailySerializer(many=True)}, tags=['Disease History Daily Data'])
     def get(self, request):
-        data = DiseaseHistoryDaily.objects.select_related('user').filter(user=request.user, is_activate=True)
+        data = DiseaseHistoryDaily.objects.select_related('user').filter(user=request.user)
         serializer = DiseaseHistoryDailySerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -255,7 +255,7 @@ class FollowerAPIView(APIView):
 
     @swagger_auto_schema(responses={200: FollowersSerializer(many=True)}, tags=['Followers'])
     def get(self, request):
-        data = Followers.objects.select_related('user').filter(user=request.user, is_activate=True)
+        data = Followers.objects.select_related('user').filter(user=request.user)
         serializer = FollowersSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -325,27 +325,28 @@ class UpdatedAllIsActiveIssuesUserView(APIView):
             ),
         }
     )
-    def put(self, request, *args, **kwargs):
-        is_active = kwargs.get('is_active')
+    def put(self, request, is_active, *args, **kwargs):
+        if is_active not in [0,1]:
+            return Response({"error": "'is_active' must be '0' or '1'"}, status=status.HTTP_400_BAD_REQUEST)
 
-        print(type(is_active))
-        if is_active is None:
-            return Response({"error": "'is_active' parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+        is_active_bool = is_active == 1
 
         user = request.user
 
         try:
             with transaction.atomic():
-                DemographicData.objects.filter(user=user).update(is_activate=False)
-                MedicalHistory.objects.filter(user=user).update(is_activate=False)
-                Notes.objects.filter(user=user).update(is_activate=False)
-                Interests.objects.filter(user=user).update(is_activate=False)
-                DiseaseHistoryDaily.objects.filter(user=user).update(is_activate=False)
-                Followers.objects.filter(user=user).update(is_activate=False)
+                DemographicData.objects.filter(user=user).update(is_activate=is_active_bool)
+                MedicalHistory.objects.filter(user=user).update(is_activate=is_active_bool)
+                Notes.objects.filter(user=user).update(is_activate=is_active_bool)
+                Interests.objects.filter(user=user).update(is_activate=is_active_bool)
+                DiseaseHistoryDaily.objects.filter(user=user).update(is_activate=is_active_bool)
+                Followers.objects.filter(user=user).update(is_activate=is_active_bool)
 
-            return Response({"message": f"All records successfully updated. is_active={False}"}, status=status.HTTP_200_OK)
+            return Response({"message": f"All records successfully updated."},
+                            status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 

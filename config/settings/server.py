@@ -15,3 +15,5 @@ DATABASES = {
         "PORT": 5432,
     }
 }
+
+BASE_URL = 'https://api.tabakoptrf.ru/'

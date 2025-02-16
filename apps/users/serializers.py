@@ -242,12 +242,29 @@ class UserDetailSerializer(serializers.ModelSerializer):
     user_insterest = InterestsListSerializer(read_only=True, many=True)
     user_disease_history_daily = DiseaseHistoryDailyListSerializer(read_only=True, many=True)
     user_follow = FollowersListSerializer(read_only=True, many=True)
+    is_activate = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name', 'groups', 'avatar', 'birth_date',
             'user_demographic_data', 'user_medical_history', 'user_notes', 'user_insterest',
-            'user_disease_history_daily', 'user_follow'
+            'user_disease_history_daily', 'user_follow', 'is_activate'
         ]
+
+    def get_is_activate(self, obj):
+        related_models = [
+            obj.user_demographic_data.all(),
+            obj.user_medical_history.all(),
+            obj.user_notes.all(),
+            obj.user_insterest.all(),
+            obj.user_disease_history_daily.all(),
+            obj.user_follow.all()
+        ]
+
+        for queryset in related_models:
+            if any(not item.is_activate for item in queryset):
+                return False
+
+        return True
 
