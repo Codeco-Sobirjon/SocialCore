@@ -247,7 +247,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [
-            'id', 'username', 'email', 'first_name', 'last_name', 'groups', 'avatar', 'birth_date',
+            'id', 'username', 'email', 'first_name', 'last_name', 'avatar', 'birth_date', 'about_yourself', 'groups',
+            'avatar', 'birth_date',
             'user_demographic_data', 'user_medical_history', 'user_notes', 'user_insterest',
             'user_disease_history_daily', 'user_follow', 'is_activate'
         ]
@@ -267,4 +268,3 @@ class UserDetailSerializer(serializers.ModelSerializer):
                 return False
 
         return True
-
