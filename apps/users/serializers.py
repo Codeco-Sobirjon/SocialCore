@@ -12,7 +12,7 @@ from apps.accounts.serializers import CustomUserDetailSerializer
 User = get_user_model()
 
 
-class GroupListSerializer(serializers.ModelSerializer):
+class GroupListsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id', 'name']
@@ -235,7 +235,7 @@ class FollowersSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    groups = GroupListSerializer(many=True, read_only=True)
+    groups = GroupListsSerializer(many=True, read_only=True)
     user_demographic_data = DemographicDataListSerializer(read_only=True, many=True)
     user_medical_history = MedicalHistoryListSerializer(read_only=True, many=True)
     user_notes = NotesListSerializer(read_only=True, many=True)
