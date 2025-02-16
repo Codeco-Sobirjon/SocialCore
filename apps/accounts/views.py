@@ -13,6 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext as _
 from apps.accounts.serializers import SignUpSerializer, CustomAuthTokenSerializer, CustomUserDetailSerializer, \
     UpdateUserSerializer, PasswordUpdateSerializer
+from apps.users.serializers import UserDetailSerializer
 
 User = get_user_model()
 
@@ -124,13 +125,13 @@ class CustomUserView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        responses={200: CustomUserDetailSerializer()},
+        responses={200: UserDetailSerializer()},
         operation_description="Retrieve details of the guest user.", tags=['Account']
     )
     def get(self, request, *args, **kwargs):
         user_model = get_user_model()
         user = get_object_or_404(user_model, id=kwargs.get('id'))
-        serializer = CustomUserDetailSerializer(user, context={'request': request})
+        serializer = UserDetailSerializer(user, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

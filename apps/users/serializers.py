@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -9,6 +10,12 @@ from apps.users.models import (
 from apps.accounts.serializers import CustomUserDetailSerializer
 
 User = get_user_model()
+
+
+class GroupListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['id', 'name']
 
 
 class DemographicDataListSerializer(serializers.ModelSerializer):
@@ -225,3 +232,22 @@ class FollowersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Followers
         fields = ['id', 'user', 'follow', 'created_at', 'is_activate']
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    groups = GroupListSerializer(many=True, read_only=True)
+    user_demographic_data = DemographicDataListSerializer(read_only=True, many=True)
+    user_medical_history = MedicalHistoryListSerializer(read_only=True, many=True)
+    user_notes = NotesListSerializer(read_only=True, many=True)
+    user_insterest = InterestsListSerializer(read_only=True, many=True)
+    user_disease_history_daily = DiseaseHistoryDailyListSerializer(read_only=True, many=True)
+    user_follow = FollowersListSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = [
+            'id', 'username', 'email', 'first_name', 'last_name', 'groups', 'avatar', 'birth_date',
+            'user_demographic_data', 'user_medical_history', 'user_notes', 'user_insterest',
+            'user_disease_history_daily', 'user_follow'
+        ]
+
