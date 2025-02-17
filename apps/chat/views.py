@@ -113,7 +113,7 @@ class StartConversationView(APIView):
         with transaction.atomic():
             conversation = Conversation.objects.create(initiator=request.user, receiver=participant)
 
-        return Response(ConversationSerializer(instance=conversation).data, status=status.HTTP_201_CREATED)
+        return Response(ConversationSerializer(instance=conversation, context={'request': request}).data, status=status.HTTP_201_CREATED)
 
 
 class GetConversationView(APIView):
