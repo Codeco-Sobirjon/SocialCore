@@ -104,7 +104,8 @@ class CustomUserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = [
-            'id', 'username', 'email', 'first_name', 'last_name', 'groups', 'avatar', 'birth_date', 'is_activate'
+            'id', 'username', 'email', 'first_name', 'last_name', 'groups', 'avatar', 'birth_date', 'about_yourself',
+            'is_activate'
         ]
 
     def get_is_activate(self, obj):
@@ -148,7 +149,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 
 class PasswordUpdateSerializer(serializers.Serializer):
-    new_password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    new_password = serializers.CharField(write_only=True, required=True)
 
     def update(self, instance, validated_data):
         instance.set_password(validated_data['new_password'])

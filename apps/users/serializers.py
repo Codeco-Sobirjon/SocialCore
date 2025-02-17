@@ -241,7 +241,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
     user_notes = NotesListSerializer(read_only=True, many=True)
     user_insterest = InterestsListSerializer(read_only=True, many=True)
     user_disease_history_daily = DiseaseHistoryDailyListSerializer(read_only=True, many=True)
-    user_follow = FollowersListSerializer(read_only=True, many=True)
+    user_follow = FollowersSerializer(read_only=True, many=True)
     is_activate = serializers.SerializerMethodField()
 
     class Meta:
