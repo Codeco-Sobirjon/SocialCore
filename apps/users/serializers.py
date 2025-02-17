@@ -226,12 +226,11 @@ class FollowersListSerializer(serializers.ModelSerializer):
 
 
 class FollowersSerializer(serializers.ModelSerializer):
-    user = CustomUserDetailSerializer(read_only=True)
     follow = CustomUserDetailSerializer(read_only=True)
 
     class Meta:
         model = Followers
-        fields = ['id', 'user', 'follow', 'created_at', 'is_activate']
+        fields = ['id', 'follow', 'created_at', 'is_activate']
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -266,5 +265,4 @@ class UserDetailSerializer(serializers.ModelSerializer):
         for queryset in related_models:
             if any(not item.is_activate for item in queryset):
                 return False
-
         return True
