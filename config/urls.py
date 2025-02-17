@@ -9,7 +9,6 @@ from drf_yasg.views import get_schema_view
 
 from rest_framework import permissions
 
-from apps.accounts.views import VKLogin
 
 schema_view: get_schema_view = get_schema_view(
     openapi.Info(
@@ -34,8 +33,6 @@ urlpatterns += [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('ckeditor5/', include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
     path('captcha/', include('captcha.urls')),
-
-    path('auth/vk/', VKLogin.as_view(), name='vk_login'),
 ]
 
 urlpatterns += [

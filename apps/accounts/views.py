@@ -1,5 +1,8 @@
+from urllib.parse import urlparse, parse_qs
+from datetime import datetime
 import requests
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
@@ -155,9 +158,135 @@ class PasswordUpdateView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class VKAuthAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_summary="Получение access_token от VK",
+        operation_description="Этот эндпоинт принимает callback_url, извлекает code и получает access_token от VK API.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "callback_url": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="URL с кодом авторизации VK, полученным после логина."
+                )
+            },
+            required=["callback_url"]
+        ),
+        responses={
+            200: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "access_token": openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        description="Токен доступа VK."
+                    )
+                }
+            ),
+            400: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "error": openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        description="Описание ошибки."
+                    )
+                }
+            ),
+        }
+    )
+    def post(self, request):
+        callback_url = request.data.get("callback_url")
+
+        if not callback_url:
+            return Response({"error": "callback_url is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        parsed_url = urlparse(callback_url)
+        query_params = parse_qs(parsed_url.query)
+        code = query_params.get("code", [None])[0]
+
+        if not code:
+            return Response({"error": "Authorization code not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        token_url = (
+            f"https://oauth.vk.com/access_token?"
+            f"client_id=52982778&"
+            f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
+            f"redirect_uri=http://localhost/auth/vk/login/callback/&"
+            f"code={code}"
+        )
+
+        response = requests.get(token_url)
+
+        if response.status_code == 200:
+            data = response.json()
+            access_token = data.get("access_token")
+
+            if not access_token:
+                return Response({"error": "access_token not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response({"access_token": access_token}, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"error": "Failed to get access token", "details": response.text},
+                status=response.status_code,
+            )
+
+
 class VKLogin(APIView):
     permission_classes = [AllowAny]
 
+    @swagger_auto_schema(
+        operation_summary="Аутентификация через VK",
+        operation_description="Получает `access_token` VK, запрашивает профиль пользователя и возвращает JWT токены.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "access_token": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="VK access token, полученный после авторизации."
+                )
+            },
+            required=["access_token"]
+        ),
+        responses={
+            200: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "access_token": openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        description="JWT access token."
+                    ),
+                    "refresh_token": openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        description="JWT refresh token."
+                    ),
+                    "user_data": openapi.Schema(
+                        type=openapi.TYPE_OBJECT,
+                        description="Данные пользователя VK.",
+                        properties={
+                            "id": openapi.Schema(type=openapi.TYPE_INTEGER, description="VK ID пользователя."),
+                            "first_name": openapi.Schema(type=openapi.TYPE_STRING, description="Имя."),
+                            "last_name": openapi.Schema(type=openapi.TYPE_STRING, description="Фамилия."),
+                            "photo_max_orig": openapi.Schema(type=openapi.TYPE_STRING, description="URL аватара.")
+                        }
+                    )
+                }
+            ),
+            400: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "error": openapi.Schema(type=openapi.TYPE_STRING, description="Описание ошибки.")
+                }
+            ),
+            500: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    "error": openapi.Schema(type=openapi.TYPE_STRING, description="Ошибка на сервере.")
+                }
+            ),
+        }
+    )
     def post(self, request, *args, **kwargs):
         data = request.data
         access_token = data.get("access_token")
@@ -183,12 +312,22 @@ class VKLogin(APIView):
             vk_id = user_data.get("id")
             first_name = user_data.get("first_name", "")
             last_name = user_data.get("last_name", "")
+            bdate = user_data.get("bdate", "")
+            photo_url = user_data.get("photo_max_orig", "")
+
             username = f"vk_{vk_id}"
 
             user, created = User.objects.get_or_create(username=username, defaults={
                 "first_name": first_name,
                 "last_name": last_name,
+                'birth_date': datetime.strptime(bdate, "%d.%m.%Y").date() if bdate else None,
             })
+
+            if photo_url:
+                photo_response = requests.get(photo_url)
+                if photo_response.status_code == 200:
+                    avatar_name = f"avatars/{username}.jpg"
+                    user.avatar.save(avatar_name, ContentFile(photo_response.content), save=True)
 
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)

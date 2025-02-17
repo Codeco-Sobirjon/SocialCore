@@ -2,7 +2,7 @@ from django.urls import path
 
 from apps.accounts.views import (
     GenerateCaptchaAPIView, UserSignupView, CustomAuthTokenView, CustomUserDetailView, PasswordUpdateView,
-    CustomUserView
+    CustomUserView, VKAuthAPIView, VKLogin
 )
 
 urlpatterns = [
@@ -12,4 +12,6 @@ urlpatterns = [
     path('user/', CustomUserDetailView.as_view(), name='user-detail'),
     path('guest/user/<int:id>/', CustomUserView.as_view(), name='guest-user-detail'),
     path('update-password/', PasswordUpdateView.as_view(), name='update-password'),
+    path("auth/check/vk/", VKAuthAPIView.as_view(), name="vk-auth"),
+    path('auth/vk/', VKLogin.as_view(), name='vk_login'),
 ]
