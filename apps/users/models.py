@@ -3,13 +3,13 @@ from django.conf import settings
 
 
 class DemographicData(models.Model):
-    city = models.CharField(max_length=300, verbose_name="Страна", null=True, blank=True)
-    region = models.CharField(max_length=300, verbose_name="Город", null=True, blank=True)
-    position = models.CharField(max_length=300, verbose_name="Образование", null=True, blank=True)
-    ethnicity = models.CharField(max_length=300, verbose_name="Этническая принадлежность", null=True, blank=True)
-    type_health_insurance = models.CharField(max_length=300, verbose_name="Вид медицинской страховки", null=True,
+    city = models.CharField(max_length=700, verbose_name="Страна", null=True, blank=True)
+    region = models.CharField(max_length=700, verbose_name="Город", null=True, blank=True)
+    position = models.CharField(max_length=700, verbose_name="Образование", null=True, blank=True)
+    ethnicity = models.CharField(max_length=700, verbose_name="Этническая принадлежность", null=True, blank=True)
+    type_health_insurance = models.CharField(max_length=700, verbose_name="Вид медицинской страховки", null=True,
                                              blank=True)
-    biography = models.CharField(max_length=300, verbose_name="Биография", null=True, blank=True)
+    biography = models.CharField(max_length=700, verbose_name="Биография", null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='Демографические данные пользователя', related_name='user_demographic_data')
     is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
@@ -26,7 +26,7 @@ class DemographicData(models.Model):
 
 
 class MedicalIllness(models.Model):
-    name = models.CharField(max_length=300, verbose_name="Наименование заболеваний", null=True, blank=True)
+    name = models.CharField(max_length=700, verbose_name="Наименование заболеваний", null=True, blank=True)
 
     objects = models.Manager()
 
@@ -79,7 +79,7 @@ class Notes(models.Model):
 
 
 class Interests(models.Model):
-    name = models.CharField(max_length=300, verbose_name="Название интереса", null=True, blank=True)
+    name = models.CharField(max_length=700, verbose_name="Название интереса", null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              verbose_name='Интерес пользователя', related_name='user_insterest')
     is_activate = models.BooleanField(default=True, null=True, blank=True, verbose_name="Активируется")
