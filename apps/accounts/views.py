@@ -212,7 +212,7 @@ class VKAuthAPIView(APIView):
             f"https://oauth.vk.com/access_token?"
             f"client_id=52982778&"
             f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
-            f"redirect_uri=http://localhost/auth/vk/login/callback/&"
+            f"redirect_uri=https://patient-opal.vercel.app/auth/vk/login/callback/&"
             f"code={code}"
         )
 
@@ -340,3 +340,6 @@ class VKLogin(APIView):
 
         except requests.exceptions.RequestException as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# https://oauth.vk.com/authorize?client_id=52982778&redirect_uri=https://patient-opal.vercel.app/auth/vk/login/callback/&display=page&scope=email&response_type=code&v=5.131
