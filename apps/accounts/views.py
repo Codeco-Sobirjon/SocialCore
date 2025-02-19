@@ -212,7 +212,7 @@ class VKAuthAPIView(APIView):
             f"https://oauth.vk.com/access_token?"
             f"client_id=52982778&"
             f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
-            f"redirect_uri=https://patient-opal.vercel.app/auth/vk/login/callback/in&"
+            f"redirect_uri=https://xn--d1aadaem2ajbjp9p.xn--p1ai/auth/vk/login/callback/in&"
             f"code={code}"
         )
 
