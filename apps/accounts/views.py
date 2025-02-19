@@ -208,11 +208,18 @@ class VKAuthAPIView(APIView):
         if not code:
             return Response({"error": "Authorization code not found"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # token_url = (
+        #     f"https://oauth.vk.com/access_token?"
+        #     f"client_id=52982778&"
+        #     f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
+        #     f"redirect_uri=https://patient-opal.vercel.app/auth/vk/login/callback/in&"
+        #     f"code={code}"
+        # )
         token_url = (
             f"https://oauth.vk.com/access_token?"
             f"client_id=52982778&"
             f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
-            f"redirect_uri=https://xn--d1aadaem2ajbjp9p.xn--p1ai/auth/vk/login/callback/&"
+            f"redirect_uri=https://xn--d1aadaem2ajbjp9p.xn--p1ai/auth/vk/login/callback/in&"
             f"code={code}"
         )
 
@@ -228,8 +235,7 @@ class VKAuthAPIView(APIView):
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
         else:
             return Response(
-                {"error": f"Failed to get access token {code} {response}", "details": response.text, "code": code,
-                 'token_url': 'token_url'},
+                {"error": "Failed to get access token", "details": response.text},
                 status=response.status_code,
             )
 
@@ -341,5 +347,6 @@ class VKLogin(APIView):
 
         except requests.exceptions.RequestException as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 # https://oauth.vk.com/authorize?client_id=52982778&redirect_uri=https://patient-opal.vercel.app/auth/vk/login/callback/&display=page&scope=email&response_type=code&v=5.131
