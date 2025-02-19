@@ -16,4 +16,4 @@ DATABASES = {
     }
 }
 
-BASE_URL = 'https://api.tabakoptrf.ru/'
+BASE_URL = 'https://healthsphere.ru/'
