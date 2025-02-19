@@ -208,6 +208,8 @@ class VKAuthAPIView(APIView):
         if not code:
             return Response({"error": "Authorization code not found"}, status=status.HTTP_400_BAD_REQUEST)
 
+        print(code)
+
         token_url = (
             f"https://oauth.vk.com/access_token?"
             f"client_id=52982778&"
@@ -215,6 +217,7 @@ class VKAuthAPIView(APIView):
             f"redirect_uri=https://startap-seed.ru/auth/vk/login/callback/in&"
             f"code={code}"
         )
+        print(token_url)
 
         response = requests.get(token_url)
 
