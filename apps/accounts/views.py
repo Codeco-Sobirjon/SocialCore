@@ -48,7 +48,7 @@ class GenerateCaptchaAPIView(APIView):
         }
     )
     def get(self, request, *args, **kwargs):
-        base_url = 'https://healthsphere.ru/'
+        base_url = settings.BASE_URL
         captcha_key = CaptchaStore.generate_key()
         captcha_image_url = f"{base_url}captcha/image/{captcha_key}/"
 
