@@ -214,7 +214,7 @@ class VKAuthAPIView(APIView):
             f"https://oauth.vk.com/access_token?"
             f"client_id=52982778&"
             f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
-            f"redirect_uri=https://startap-seed.ru/auth/vk/login/callback/in&"
+            f"redirect_uri=https://startap-seed.ru/auth/vk/login/callback/"
             f"code={code}"
         )
         print(token_url)
