@@ -228,7 +228,8 @@ class VKAuthAPIView(APIView):
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
         else:
             return Response(
-                {"error": "Failed to get access token", "details": response.text, "code": code, 'token_url':'token_url'},
+                {"error": f"Failed to get access token {code} {response}", "details": response.text, "code": code,
+                 'token_url': 'token_url'},
                 status=response.status_code,
             )
 
@@ -340,6 +341,5 @@ class VKLogin(APIView):
 
         except requests.exceptions.RequestException as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 # https://oauth.vk.com/authorize?client_id=52982778&redirect_uri=https://patient-opal.vercel.app/auth/vk/login/callback/&display=page&scope=email&response_type=code&v=5.131
