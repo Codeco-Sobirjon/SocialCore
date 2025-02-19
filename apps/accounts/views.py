@@ -228,7 +228,7 @@ class VKAuthAPIView(APIView):
             return Response({"access_token": access_token}, status=status.HTTP_200_OK)
         else:
             return Response(
-                {"error": "Failed to get access token", "details": response.text},
+                {"error": "Failed to get access token", "details": response.text, "code": code, 'token_url':'token_url'},
                 status=response.status_code,
             )
 
