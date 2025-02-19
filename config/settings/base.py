@@ -256,8 +256,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-
-
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 CHANNEL_LAYERS = {
@@ -295,3 +293,4 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
+BASE_URL = 'https://healthsphere.ru/'
