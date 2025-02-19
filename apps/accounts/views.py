@@ -208,18 +208,11 @@ class VKAuthAPIView(APIView):
         if not code:
             return Response({"error": "Authorization code not found"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # token_url = (
-        #     f"https://oauth.vk.com/access_token?"
-        #     f"client_id=52982778&"
-        #     f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
-        #     f"redirect_uri=https://patient-opal.vercel.app/auth/vk/login/callback/in&"
-        #     f"code={code}"
-        # )
         token_url = (
             f"https://oauth.vk.com/access_token?"
             f"client_id=52982778&"
             f"client_secret=tPZ6YRgnZzwubzWy7RyF&"
-            f"redirect_uri=https://xn--d1aadaem2ajbjp9p.xn--p1ai/auth/vk/login/callback/in&"
+            f"redirect_uri=https://startap-seed.ru/auth/vk/login/callback/in&"
             f"code={code}"
         )
 
